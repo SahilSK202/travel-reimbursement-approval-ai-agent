@@ -1,0 +1,1224 @@
+[
+  {
+    "claim_id": "CLM-1001",
+    "expected_decision": "Approve",
+    "actual_decision": "Approve",
+    "status": "PASS",
+    "final_decision": {
+      "claim_id": "CLM-1001",
+      "decision": "Approve",
+      "total_claimed_amount": 503.0,
+      "approved_amount": 503.0,
+      "deducted_or_rejected_amount": 0.0,
+      "missing_documents": [],
+      "policy_references": [
+        "Eligible Expense Categories",
+        "Receipt Requirements",
+        "Approval Thresholds"
+      ],
+      "reason_codes": [
+        "FULLY_COMPLIANT"
+      ],
+      "confidence": 1.0,
+      "explanation": "The claim is fully compliant with Sahil Corp's travel reimbursement policy, all required receipts are present, and the expenses are within the approved limits."
+    },
+    "audit_trail": [
+      {
+        "step": 1,
+        "tool_called": "policy_lookup",
+        "arguments": {
+          "topics": "lodging, meals, ground_transport, receipts, approval thresholds, manual review"
+        },
+        "result": {
+          "matched": {
+            "lodging": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n",
+              "## 6. Per-Diem and Limits\nSee `limits.json` for the authoritative table of per-night lodging caps and per-day meal caps by city tier, plus the approval matrix.\n"
+            ],
+            "meals": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "receipts": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "approval thresholds": [
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "manual review": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n",
+              "## 4. Common Reasons for Partial Approval or Rejection\n- Expense category not eligible (e.g., alcohol, personal entertainment).\n- Amount exceeds per-night or per-day limit for the claimant's city tier - excess is deducted, remainder approved.\n- Expense date falls outside the approved trip date range.\n- Duplicate submission of the same receipt/expense (same vendor, date, and amount as a previously processed claim).\n- Missing required receipt for an expense over $25 - routed to Manual Review for documentation follow-up.\n",
+              "## 5. Manual Review Triggers\nA claim (or individual line item) must be routed to Manual Review when:\n- Total claim exceeds $2,000.\n- A required receipt is missing for a line item over $25.\n- Conflicting or ambiguous information (e.g., trip dates don't match expense dates, category unclear).\n- Suspected duplicate that cannot be confirmed with high confidence.\n- Any policy exception is requested (e.g., premium economy without documented pre-approval).\n"
+            ]
+          },
+          "unmatched_topics": [
+            "ground_transport"
+          ],
+          "available_section_headers": [
+            "# Sahil Corp - Travel & Expense Reimbursement Policy (Mock)",
+            "1. Eligible Expense Categories",
+            "2. Receipt Requirements",
+            "3. Approval Thresholds",
+            "4. Common Reasons for Partial Approval or Rejection",
+            "5. Manual Review Triggers",
+            "6. Per-Diem and Limits"
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "tool_called": "limit_and_perdiem_check",
+        "arguments": {
+          "destination_city": "Austin",
+          "expense_lines": [
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-11",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 40,
+              "category": "meals",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Local Diner"
+            },
+            {
+              "amount": 35,
+              "category": "meals",
+              "date": "2026-05-11",
+              "has_receipt": true,
+              "vendor": "Taco Place"
+            },
+            {
+              "amount": 28,
+              "category": "ground_transport",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Uber"
+            }
+          ]
+        },
+        "result": {
+          "city_tier": "tier_2",
+          "line_results": [
+            {
+              "category": "lodging",
+              "date": "2026-05-10",
+              "vendor": "Hilton Austin",
+              "claimed_amount": 200.0,
+              "status": "ok",
+              "cap_applied": 220,
+              "approved_amount": 200.0,
+              "deducted_amount": 0.0,
+              "reason": "Within lodging cap."
+            },
+            {
+              "category": "lodging",
+              "date": "2026-05-11",
+              "vendor": "Hilton Austin",
+              "claimed_amount": 200.0,
+              "status": "ok",
+              "cap_applied": 220,
+              "approved_amount": 200.0,
+              "deducted_amount": 0.0,
+              "reason": "Within lodging cap."
+            },
+            {
+              "category": "meals",
+              "date": "2026-05-10",
+              "vendor": "Local Diner",
+              "claimed_amount": 40.0,
+              "status": "ok",
+              "cap_applied": 65,
+              "approved_amount": 40.0,
+              "deducted_amount": 0.0,
+              "reason": "Within meal per-diem."
+            },
+            {
+              "category": "meals",
+              "date": "2026-05-11",
+              "vendor": "Taco Place",
+              "claimed_amount": 35.0,
+              "status": "ok",
+              "cap_applied": 65,
+              "approved_amount": 35.0,
+              "deducted_amount": 0.0,
+              "reason": "Within meal per-diem."
+            },
+            {
+              "category": "ground_transport",
+              "date": "2026-05-10",
+              "vendor": "Uber",
+              "claimed_amount": 28.0,
+              "status": "ok",
+              "approved_amount": 28.0,
+              "deducted_amount": 0.0,
+              "reason": "No cap defined for this category in mock policy; approved as-is pending receipt check."
+            }
+          ],
+          "total_claimed": 503.0,
+          "total_approved_by_limits": 503.0,
+          "total_deducted_by_limits": 0.0
+        }
+      },
+      {
+        "step": 3,
+        "tool_called": "receipt_completeness_check",
+        "arguments": {
+          "expense_lines": [
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-11",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 40,
+              "category": "meals",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Local Diner"
+            },
+            {
+              "amount": 35,
+              "category": "meals",
+              "date": "2026-05-11",
+              "has_receipt": true,
+              "vendor": "Taco Place"
+            },
+            {
+              "amount": 28,
+              "category": "ground_transport",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Uber"
+            }
+          ]
+        },
+        "result": {
+          "receipt_threshold": 25,
+          "missing_receipts": [],
+          "all_required_receipts_present": true
+        }
+      },
+      {
+        "step": 4,
+        "tool_called": "duplicate_detector",
+        "arguments": {
+          "employee_name": "Sahil SK",
+          "expense_lines": [
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-11",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 40,
+              "category": "meals",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Local Diner"
+            },
+            {
+              "amount": 35,
+              "category": "meals",
+              "date": "2026-05-11",
+              "has_receipt": true,
+              "vendor": "Taco Place"
+            },
+            {
+              "amount": 28,
+              "category": "ground_transport",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Uber"
+            }
+          ]
+        },
+        "result": {
+          "suspected_duplicates": [],
+          "duplicate_count": 0
+        }
+      },
+      {
+        "step": 5,
+        "tool_called": "output_validator",
+        "arguments": {
+          "decision_json": "see final output"
+        },
+        "result": {
+          "valid": true,
+          "errors": []
+        }
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-1002",
+    "expected_decision": "Partially Approve",
+    "actual_decision": "Partially Approve",
+    "status": "PASS",
+    "final_decision": {
+      "claim_id": "CLM-1002",
+      "decision": "Partially Approve",
+      "total_claimed_amount": 1100.0,
+      "approved_amount": 810.0,
+      "deducted_or_rejected_amount": 290.0,
+      "missing_documents": [],
+      "policy_references": [
+        "## 1. Eligible Expense Categories",
+        "## 6. Per-Diem and Limits"
+      ],
+      "reason_codes": [
+        "OVER_LODGING_CAP",
+        "OVER_MEAL_CAP"
+      ],
+      "confidence": 0.95,
+      "explanation": "The claim is partially approved because it exceeds the lodging and meal caps for the destination city. The excess amounts have been deducted according to policy. All required receipts are present, and there are no suspected duplicates."
+    },
+    "audit_trail": [
+      {
+        "step": 1,
+        "tool_called": "policy_lookup",
+        "arguments": {
+          "topics": "lodging, meals, misc, receipts, approval thresholds, manual review"
+        },
+        "result": {
+          "matched": {
+            "lodging": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n",
+              "## 6. Per-Diem and Limits\nSee `limits.json` for the authoritative table of per-night lodging caps and per-day meal caps by city tier, plus the approval matrix.\n"
+            ],
+            "meals": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "misc": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "receipts": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "approval thresholds": [
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "manual review": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n",
+              "## 4. Common Reasons for Partial Approval or Rejection\n- Expense category not eligible (e.g., alcohol, personal entertainment).\n- Amount exceeds per-night or per-day limit for the claimant's city tier - excess is deducted, remainder approved.\n- Expense date falls outside the approved trip date range.\n- Duplicate submission of the same receipt/expense (same vendor, date, and amount as a previously processed claim).\n- Missing required receipt for an expense over $25 - routed to Manual Review for documentation follow-up.\n",
+              "## 5. Manual Review Triggers\nA claim (or individual line item) must be routed to Manual Review when:\n- Total claim exceeds $2,000.\n- A required receipt is missing for a line item over $25.\n- Conflicting or ambiguous information (e.g., trip dates don't match expense dates, category unclear).\n- Suspected duplicate that cannot be confirmed with high confidence.\n- Any policy exception is requested (e.g., premium economy without documented pre-approval).\n"
+            ]
+          },
+          "unmatched_topics": [],
+          "available_section_headers": []
+        }
+      },
+      {
+        "step": 2,
+        "tool_called": "limit_and_perdiem_check",
+        "arguments": {
+          "destination_city": "New York",
+          "expense_lines": [
+            {
+              "amount": 480,
+              "category": "lodging",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Marriott NYC"
+            },
+            {
+              "amount": 480,
+              "category": "lodging",
+              "date": "2026-05-02",
+              "has_receipt": true,
+              "vendor": "Marriott NYC"
+            },
+            {
+              "amount": 120,
+              "category": "meals",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Steakhouse"
+            },
+            {
+              "amount": 20,
+              "category": "misc",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Hotel Parking"
+            }
+          ]
+        },
+        "result": {
+          "city_tier": "tier_1",
+          "line_results": [
+            {
+              "category": "lodging",
+              "date": "2026-05-01",
+              "vendor": "Marriott NYC",
+              "claimed_amount": 480.0,
+              "status": "over_cap",
+              "cap_applied": 350,
+              "approved_amount": 350,
+              "deducted_amount": 130.0,
+              "reason": "Exceeds tier_1 lodging cap of $350/night; excess deducted."
+            },
+            {
+              "category": "lodging",
+              "date": "2026-05-02",
+              "vendor": "Marriott NYC",
+              "claimed_amount": 480.0,
+              "status": "over_cap",
+              "cap_applied": 350,
+              "approved_amount": 350,
+              "deducted_amount": 130.0,
+              "reason": "Exceeds tier_1 lodging cap of $350/night; excess deducted."
+            },
+            {
+              "category": "meals",
+              "date": "2026-05-01",
+              "vendor": "Steakhouse",
+              "claimed_amount": 120.0,
+              "status": "over_cap",
+              "cap_applied": 90,
+              "approved_amount": 90.0,
+              "deducted_amount": 30.0,
+              "reason": "Exceeds tier_1 meal cap of $90/day; excess deducted."
+            },
+            {
+              "category": "misc",
+              "date": "2026-05-01",
+              "vendor": "Hotel Parking",
+              "claimed_amount": 20.0,
+              "status": "ok",
+              "cap_applied": 25,
+              "approved_amount": 20.0,
+              "deducted_amount": 0.0,
+              "reason": "Within misc daily cap."
+            }
+          ],
+          "total_claimed": 1100.0,
+          "total_approved_by_limits": 810.0,
+          "total_deducted_by_limits": 290.0
+        }
+      },
+      {
+        "step": 3,
+        "tool_called": "receipt_completeness_check",
+        "arguments": {
+          "expense_lines": [
+            {
+              "amount": 480,
+              "category": "lodging",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Marriott NYC"
+            },
+            {
+              "amount": 480,
+              "category": "lodging",
+              "date": "2026-05-02",
+              "has_receipt": true,
+              "vendor": "Marriott NYC"
+            },
+            {
+              "amount": 120,
+              "category": "meals",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Steakhouse"
+            },
+            {
+              "amount": 20,
+              "category": "misc",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Hotel Parking"
+            }
+          ]
+        },
+        "result": {
+          "receipt_threshold": 25,
+          "missing_receipts": [],
+          "all_required_receipts_present": true
+        }
+      },
+      {
+        "step": 4,
+        "tool_called": "duplicate_detector",
+        "arguments": {
+          "employee_name": "Daniel Cho",
+          "expense_lines": [
+            {
+              "amount": 480,
+              "category": "lodging",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Marriott NYC"
+            },
+            {
+              "amount": 480,
+              "category": "lodging",
+              "date": "2026-05-02",
+              "has_receipt": true,
+              "vendor": "Marriott NYC"
+            },
+            {
+              "amount": 120,
+              "category": "meals",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Steakhouse"
+            },
+            {
+              "amount": 20,
+              "category": "misc",
+              "date": "2026-05-01",
+              "has_receipt": true,
+              "vendor": "Hotel Parking"
+            }
+          ]
+        },
+        "result": {
+          "suspected_duplicates": [],
+          "duplicate_count": 0
+        }
+      },
+      {
+        "step": 5,
+        "tool_called": "output_validator",
+        "arguments": {
+          "decision_json": "see final output"
+        },
+        "result": {
+          "valid": true,
+          "errors": []
+        }
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-1003",
+    "expected_decision": "Partially Approve",
+    "actual_decision": "Partially Approve",
+    "status": "PASS",
+    "final_decision": {
+      "claim_id": "CLM-1003",
+      "decision": "Partially Approve",
+      "total_claimed_amount": 163.0,
+      "approved_amount": 83.0,
+      "deducted_or_rejected_amount": 80.0,
+      "missing_documents": [],
+      "policy_references": [
+        "ineligible_category",
+        "over_cap"
+      ],
+      "reason_codes": [
+        "INELIGIBLE_CATEGORY",
+        "OVER_MEAL_CAP"
+      ],
+      "confidence": 0.9,
+      "explanation": "The claim was partially approved due to some expenses exceeding the company's reimbursement caps and one expense category being ineligible for reimbursement. Specifically, the 'meals' category exceeded the daily cap, and the 'alcohol' category is not reimbursable. The 'ground transport' expense was approved as it did not exceed any defined limit."
+    },
+    "audit_trail": [
+      {
+        "step": 1,
+        "tool_called": "policy_lookup",
+        "arguments": {
+          "topics": "meals, alcohol, ground transport, receipts, approval thresholds, manual review"
+        },
+        "result": {
+          "matched": {
+            "meals": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "alcohol": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n",
+              "## 4. Common Reasons for Partial Approval or Rejection\n- Expense category not eligible (e.g., alcohol, personal entertainment).\n- Amount exceeds per-night or per-day limit for the claimant's city tier - excess is deducted, remainder approved.\n- Expense date falls outside the approved trip date range.\n- Duplicate submission of the same receipt/expense (same vendor, date, and amount as a previously processed claim).\n- Missing required receipt for an expense over $25 - routed to Manual Review for documentation follow-up.\n"
+            ],
+            "ground transport": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "receipts": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "approval thresholds": [
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "manual review": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n",
+              "## 4. Common Reasons for Partial Approval or Rejection\n- Expense category not eligible (e.g., alcohol, personal entertainment).\n- Amount exceeds per-night or per-day limit for the claimant's city tier - excess is deducted, remainder approved.\n- Expense date falls outside the approved trip date range.\n- Duplicate submission of the same receipt/expense (same vendor, date, and amount as a previously processed claim).\n- Missing required receipt for an expense over $25 - routed to Manual Review for documentation follow-up.\n",
+              "## 5. Manual Review Triggers\nA claim (or individual line item) must be routed to Manual Review when:\n- Total claim exceeds $2,000.\n- A required receipt is missing for a line item over $25.\n- Conflicting or ambiguous information (e.g., trip dates don't match expense dates, category unclear).\n- Suspected duplicate that cannot be confirmed with high confidence.\n- Any policy exception is requested (e.g., premium economy without documented pre-approval).\n"
+            ]
+          },
+          "unmatched_topics": [],
+          "available_section_headers": []
+        }
+      },
+      {
+        "step": 2,
+        "tool_called": "limit_and_perdiem_check",
+        "arguments": {
+          "destination_city": "Chicago",
+          "expense_lines": [
+            {
+              "amount": 85,
+              "category": "meals",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "notes": "team drinks, mostly cocktails",
+              "vendor": "Rooftop Bar"
+            },
+            {
+              "amount": 60,
+              "category": "alcohol",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "vendor": "Rooftop Bar"
+            },
+            {
+              "amount": 18,
+              "category": "ground_transport",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "vendor": "Yellow Cab"
+            }
+          ]
+        },
+        "result": {
+          "city_tier": "tier_2",
+          "line_results": [
+            {
+              "category": "meals",
+              "date": "2026-04-20",
+              "vendor": "Rooftop Bar",
+              "claimed_amount": 85.0,
+              "status": "over_cap",
+              "cap_applied": 65,
+              "approved_amount": 65.0,
+              "deducted_amount": 20.0,
+              "reason": "Exceeds tier_2 meal cap of $65/day; excess deducted."
+            },
+            {
+              "category": "alcohol",
+              "date": "2026-04-20",
+              "vendor": "Rooftop Bar",
+              "claimed_amount": 60.0,
+              "status": "ineligible_category",
+              "approved_amount": 0.0,
+              "deducted_amount": 60.0,
+              "reason": "Category 'alcohol' is not reimbursable per policy."
+            },
+            {
+              "category": "ground_transport",
+              "date": "2026-04-20",
+              "vendor": "Yellow Cab",
+              "claimed_amount": 18.0,
+              "status": "ok",
+              "approved_amount": 18.0,
+              "deducted_amount": 0.0,
+              "reason": "No cap defined for this category in mock policy; approved as-is pending receipt check."
+            }
+          ],
+          "total_claimed": 163.0,
+          "total_approved_by_limits": 83.0,
+          "total_deducted_by_limits": 80.0
+        }
+      },
+      {
+        "step": 3,
+        "tool_called": "receipt_completeness_check",
+        "arguments": {
+          "expense_lines": [
+            {
+              "amount": 85,
+              "category": "meals",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "notes": "team drinks, mostly cocktails",
+              "vendor": "Rooftop Bar"
+            },
+            {
+              "amount": 60,
+              "category": "alcohol",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "vendor": "Rooftop Bar"
+            },
+            {
+              "amount": 18,
+              "category": "ground_transport",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "vendor": "Yellow Cab"
+            }
+          ]
+        },
+        "result": {
+          "receipt_threshold": 25,
+          "missing_receipts": [],
+          "all_required_receipts_present": true
+        }
+      },
+      {
+        "step": 4,
+        "tool_called": "duplicate_detector",
+        "arguments": {
+          "employee_name": "Priya Nair",
+          "expense_lines": [
+            {
+              "amount": 85,
+              "category": "meals",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "notes": "team drinks, mostly cocktails",
+              "vendor": "Rooftop Bar"
+            },
+            {
+              "amount": 60,
+              "category": "alcohol",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "vendor": "Rooftop Bar"
+            },
+            {
+              "amount": 18,
+              "category": "ground_transport",
+              "date": "2026-04-20",
+              "has_receipt": true,
+              "vendor": "Yellow Cab"
+            }
+          ]
+        },
+        "result": {
+          "suspected_duplicates": [],
+          "duplicate_count": 0
+        }
+      },
+      {
+        "step": 5,
+        "tool_called": "output_validator",
+        "arguments": {
+          "decision_json": "see final output"
+        },
+        "result": {
+          "valid": true,
+          "errors": []
+        }
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-1004",
+    "expected_decision": "Manual Review",
+    "actual_decision": "Manual Review",
+    "status": "PASS",
+    "final_decision": {
+      "claim_id": "CLM-1004",
+      "decision": "Manual Review",
+      "total_claimed_amount": 1980.0,
+      "approved_amount": 1980.0,
+      "deducted_or_rejected_amount": 0.0,
+      "missing_documents": [
+        "airfare receipt for United Airlines on 2026-05-15"
+      ],
+      "policy_references": [
+        "## 2. Receipt Requirements",
+        "## 3. Approval Thresholds"
+      ],
+      "reason_codes": [
+        "MISSING_RECEIPT"
+      ],
+      "confidence": 0.8,
+      "explanation": "The claim is being routed to manual review due to a missing receipt for the airfare expense. All other expenses seem to be within policy limits, but the lack of a receipt for the airfare requires further verification."
+    },
+    "audit_trail": [
+      {
+        "step": 1,
+        "tool_called": "policy_lookup",
+        "arguments": {
+          "topics": "lodging, airfare, meals, receipts, approval thresholds, manual review"
+        },
+        "result": {
+          "matched": {
+            "lodging": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n",
+              "## 6. Per-Diem and Limits\nSee `limits.json` for the authoritative table of per-night lodging caps and per-day meal caps by city tier, plus the approval matrix.\n"
+            ],
+            "airfare": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "meals": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "receipts": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "approval thresholds": [
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "manual review": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n",
+              "## 4. Common Reasons for Partial Approval or Rejection\n- Expense category not eligible (e.g., alcohol, personal entertainment).\n- Amount exceeds per-night or per-day limit for the claimant's city tier - excess is deducted, remainder approved.\n- Expense date falls outside the approved trip date range.\n- Duplicate submission of the same receipt/expense (same vendor, date, and amount as a previously processed claim).\n- Missing required receipt for an expense over $25 - routed to Manual Review for documentation follow-up.\n",
+              "## 5. Manual Review Triggers\nA claim (or individual line item) must be routed to Manual Review when:\n- Total claim exceeds $2,000.\n- A required receipt is missing for a line item over $25.\n- Conflicting or ambiguous information (e.g., trip dates don't match expense dates, category unclear).\n- Suspected duplicate that cannot be confirmed with high confidence.\n- Any policy exception is requested (e.g., premium economy without documented pre-approval).\n"
+            ]
+          },
+          "unmatched_topics": [],
+          "available_section_headers": []
+        }
+      },
+      {
+        "step": 2,
+        "tool_called": "limit_and_perdiem_check",
+        "arguments": {
+          "destination_city": "San Francisco",
+          "expense_lines": [
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-15",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-16",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-17",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 890,
+              "category": "airfare",
+              "date": "2026-05-15",
+              "has_receipt": false,
+              "vendor": "United Airlines"
+            },
+            {
+              "amount": 70,
+              "category": "meals",
+              "date": "2026-05-15",
+              "has_receipt": true,
+              "vendor": "Cafe Royal"
+            }
+          ]
+        },
+        "result": {
+          "city_tier": "tier_1",
+          "line_results": [
+            {
+              "category": "lodging",
+              "date": "2026-05-15",
+              "vendor": "Hyatt SF",
+              "claimed_amount": 340.0,
+              "status": "ok",
+              "cap_applied": 350,
+              "approved_amount": 340.0,
+              "deducted_amount": 0.0,
+              "reason": "Within lodging cap."
+            },
+            {
+              "category": "lodging",
+              "date": "2026-05-16",
+              "vendor": "Hyatt SF",
+              "claimed_amount": 340.0,
+              "status": "ok",
+              "cap_applied": 350,
+              "approved_amount": 340.0,
+              "deducted_amount": 0.0,
+              "reason": "Within lodging cap."
+            },
+            {
+              "category": "lodging",
+              "date": "2026-05-17",
+              "vendor": "Hyatt SF",
+              "claimed_amount": 340.0,
+              "status": "ok",
+              "cap_applied": 350,
+              "approved_amount": 340.0,
+              "deducted_amount": 0.0,
+              "reason": "Within lodging cap."
+            },
+            {
+              "category": "airfare",
+              "date": "2026-05-15",
+              "vendor": "United Airlines",
+              "claimed_amount": 890.0,
+              "status": "ok",
+              "approved_amount": 890.0,
+              "deducted_amount": 0.0,
+              "reason": "No cap defined for this category in mock policy; approved as-is pending receipt check."
+            },
+            {
+              "category": "meals",
+              "date": "2026-05-15",
+              "vendor": "Cafe Royal",
+              "claimed_amount": 70.0,
+              "status": "ok",
+              "cap_applied": 90,
+              "approved_amount": 70.0,
+              "deducted_amount": 0.0,
+              "reason": "Within meal per-diem."
+            }
+          ],
+          "total_claimed": 1980.0,
+          "total_approved_by_limits": 1980.0,
+          "total_deducted_by_limits": 0.0
+        }
+      },
+      {
+        "step": 3,
+        "tool_called": "receipt_completeness_check",
+        "arguments": {
+          "expense_lines": [
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-15",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-16",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-17",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 890,
+              "category": "airfare",
+              "date": "2026-05-15",
+              "has_receipt": false,
+              "vendor": "United Airlines"
+            },
+            {
+              "amount": 70,
+              "category": "meals",
+              "date": "2026-05-15",
+              "has_receipt": true,
+              "vendor": "Cafe Royal"
+            }
+          ]
+        },
+        "result": {
+          "receipt_threshold": 25,
+          "missing_receipts": [
+            {
+              "category": "airfare",
+              "date": "2026-05-15",
+              "vendor": "United Airlines",
+              "amount": 890
+            }
+          ],
+          "all_required_receipts_present": false
+        }
+      },
+      {
+        "step": 4,
+        "tool_called": "duplicate_detector",
+        "arguments": {
+          "employee_name": "Miguel Santos",
+          "expense_lines": [
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-15",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-16",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 340,
+              "category": "lodging",
+              "date": "2026-05-17",
+              "has_receipt": true,
+              "vendor": "Hyatt SF"
+            },
+            {
+              "amount": 890,
+              "category": "airfare",
+              "date": "2026-05-15",
+              "has_receipt": false,
+              "vendor": "United Airlines"
+            },
+            {
+              "amount": 70,
+              "category": "meals",
+              "date": "2026-05-15",
+              "has_receipt": true,
+              "vendor": "Cafe Royal"
+            }
+          ]
+        },
+        "result": {
+          "suspected_duplicates": [],
+          "duplicate_count": 0
+        }
+      },
+      {
+        "step": 5,
+        "tool_called": "output_validator",
+        "arguments": {
+          "decision_json": "see final output"
+        },
+        "result": {
+          "valid": true,
+          "errors": []
+        }
+      }
+    ]
+  },
+  {
+    "claim_id": "CLM-1005",
+    "expected_decision": "Manual Review",
+    "actual_decision": "Manual Review",
+    "status": "PASS",
+    "final_decision": {
+      "claim_id": "CLM-1005",
+      "decision": "Manual Review",
+      "total_claimed_amount": 240.0,
+      "approved_amount": 0.0,
+      "deducted_or_rejected_amount": 0.0,
+      "missing_documents": [],
+      "policy_references": [
+        "## 2. Receipt Requirements",
+        "## 3. Approval Thresholds",
+        "## 4. Common Reasons for Partial Approval or Rejection"
+      ],
+      "reason_codes": [
+        "DUPLICATE_SUSPECTED"
+      ],
+      "confidence": 0.8,
+      "explanation": "The claim is being routed to manual review due to suspected duplicates found in the system. Please verify the authenticity of the expenses and ensure they are not duplicates of previously submitted claims."
+    },
+    "audit_trail": [
+      {
+        "step": 1,
+        "tool_called": "policy_lookup",
+        "arguments": {
+          "topics": "lodging, meals, receipts, approval thresholds, manual review"
+        },
+        "result": {
+          "matched": {
+            "lodging": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n",
+              "## 6. Per-Diem and Limits\nSee `limits.json` for the authoritative table of per-night lodging caps and per-day meal caps by city tier, plus the approval matrix.\n"
+            ],
+            "meals": [
+              "## 1. Eligible Expense Categories\n- **Airfare** - Economy class only for domestic; Premium Economy allowed for international flights over 6 hours with manager pre-approval.\n- **Lodging** - Reasonable hotel costs, capped per night by city tier (see `limits.json`).\n- **Meals** - Per-diem based, capped per day by city tier. No alcohol reimbursement.\n- **Ground Transport** - Taxi, rideshare, rental car, train. Mileage reimbursed at $0.67/mile for personal vehicle use.\n- **Conference/Registration Fees** - Fully reimbursable with proof of registration.\n- **Miscellaneous** - Tips (max $10/day), wifi, parking. Capped at $25/day combined.\n"
+            ],
+            "receipts": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "approval thresholds": [
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n"
+            ],
+            "manual review": [
+              "## 2. Receipt Requirements\n- Receipts are **mandatory** for any single expense line over $25.\n- Expenses under $25 may use per-diem or be self-certified, but still require a category and date.\n- Missing receipts for required line items must be routed to **Manual Review**, not auto-rejected, unless the claim is clearly fraudulent or duplicated.\n",
+              "## 3. Approval Thresholds\n- Claims totaling **$0\u00e2\u20ac\u201c$500**: Auto-approve if fully compliant with policy and receipts present.\n- Claims totaling **$500.01\u00e2\u20ac\u201c$2,000**: Requires policy compliance check; auto-approve only if no exceptions found, otherwise Manual Review.\n- Claims **above $2,000**: Always routed to Manual Review regardless of compliance, due to mandatory finance sign-off.\n",
+              "## 4. Common Reasons for Partial Approval or Rejection\n- Expense category not eligible (e.g., alcohol, personal entertainment).\n- Amount exceeds per-night or per-day limit for the claimant's city tier - excess is deducted, remainder approved.\n- Expense date falls outside the approved trip date range.\n- Duplicate submission of the same receipt/expense (same vendor, date, and amount as a previously processed claim).\n- Missing required receipt for an expense over $25 - routed to Manual Review for documentation follow-up.\n",
+              "## 5. Manual Review Triggers\nA claim (or individual line item) must be routed to Manual Review when:\n- Total claim exceeds $2,000.\n- A required receipt is missing for a line item over $25.\n- Conflicting or ambiguous information (e.g., trip dates don't match expense dates, category unclear).\n- Suspected duplicate that cannot be confirmed with high confidence.\n- Any policy exception is requested (e.g., premium economy without documented pre-approval).\n"
+            ]
+          },
+          "unmatched_topics": [],
+          "available_section_headers": []
+        }
+      },
+      {
+        "step": 2,
+        "tool_called": "limit_and_perdiem_check",
+        "arguments": {
+          "destination_city": "Austin",
+          "expense_lines": [
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 40,
+              "category": "meals",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Local Diner"
+            }
+          ]
+        },
+        "result": {
+          "city_tier": "tier_2",
+          "line_results": [
+            {
+              "category": "lodging",
+              "date": "2026-05-10",
+              "vendor": "Hilton Austin",
+              "claimed_amount": 200.0,
+              "status": "ok",
+              "cap_applied": 220,
+              "approved_amount": 200.0,
+              "deducted_amount": 0.0,
+              "reason": "Within lodging cap."
+            },
+            {
+              "category": "meals",
+              "date": "2026-05-10",
+              "vendor": "Local Diner",
+              "claimed_amount": 40.0,
+              "status": "ok",
+              "cap_applied": 65,
+              "approved_amount": 40.0,
+              "deducted_amount": 0.0,
+              "reason": "Within meal per-diem."
+            }
+          ],
+          "total_claimed": 240.0,
+          "total_approved_by_limits": 240.0,
+          "total_deducted_by_limits": 0.0
+        }
+      },
+      {
+        "step": 3,
+        "tool_called": "receipt_completeness_check",
+        "arguments": {
+          "expense_lines": [
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 40,
+              "category": "meals",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Local Diner"
+            }
+          ]
+        },
+        "result": {
+          "receipt_threshold": 25,
+          "missing_receipts": [],
+          "all_required_receipts_present": true
+        }
+      },
+      {
+        "step": 4,
+        "tool_called": "duplicate_detector",
+        "arguments": {
+          "employee_name": "Asha Verma",
+          "expense_lines": [
+            {
+              "amount": 200,
+              "category": "lodging",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Hilton Austin"
+            },
+            {
+              "amount": 40,
+              "category": "meals",
+              "date": "2026-05-10",
+              "has_receipt": true,
+              "vendor": "Local Diner"
+            }
+          ]
+        },
+        "result": {
+          "suspected_duplicates": [
+            {
+              "current_line": {
+                "amount": 200,
+                "category": "lodging",
+                "date": "2026-05-10",
+                "has_receipt": true,
+                "vendor": "Hilton Austin"
+              },
+              "matched_prior_claim_id": "CLM-0991",
+              "matched_prior_processed_date": "2026-05-14"
+            },
+            {
+              "current_line": {
+                "amount": 40,
+                "category": "meals",
+                "date": "2026-05-10",
+                "has_receipt": true,
+                "vendor": "Local Diner"
+              },
+              "matched_prior_claim_id": "CLM-0991",
+              "matched_prior_processed_date": "2026-05-14"
+            }
+          ],
+          "duplicate_count": 2
+        }
+      },
+      {
+        "step": 5,
+        "tool_called": "output_validator",
+        "arguments": {
+          "decision_json": "see final output"
+        },
+        "result": {
+          "valid": true,
+          "errors": []
+        }
+      }
+    ]
+  }
+]

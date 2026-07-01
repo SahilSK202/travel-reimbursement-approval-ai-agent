@@ -1,0 +1,12 @@
+[
+  {
+    "claim_id": "CLM-0991",
+    "employee_name": "Asha Verma",
+    "expense_lines": [
+      {"category": "lodging", "date": "2026-05-10", "vendor": "Hilton Austin", "amount": 200.00},
+      {"category": "meals", "date": "2026-05-10", "vendor": "Local Diner", "amount": 40.00}
+    ],
+    "processed_date": "2026-05-14",
+    "decision": "Approve"
+  }
+]

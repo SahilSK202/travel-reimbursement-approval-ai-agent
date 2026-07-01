@@ -1,0 +1,51 @@
+{
+  "claim_id": "CLM-1004",
+  "decision": "Manual Review",
+  "total_claimed_amount": 1980.0,
+  "approved_amount": 1980.0,
+  "deducted_or_rejected_amount": 0.0,
+  "missing_documents": [
+    "Airfare receipt for United Airlines flight on 2026-05-15 ($890.00)"
+  ],
+  "policy_references": [
+    "Section 2: Receipts mandatory for any line over $25 - airfare receipt missing",
+    "Section 3: Claims above $2,000 always routed to Manual Review (finance sign-off required)",
+    "Section 5: Manual Review triggered by missing required receipt"
+  ],
+  "reason_codes": ["MISSING_RECEIPT", "OVER_MANUAL_REVIEW_THRESHOLD"],
+  "_original_llm_decision": "Partially Approve",
+  "confidence": 0.88,
+  "explanation": "This claim has two independent triggers for Manual Review: (1) the airfare line of $890.00 is missing its receipt, which is mandatory for any expense over $25; (2) the total claimed amount of $2,060.00 exceeds the $2,000 threshold that requires mandatory finance sign-off regardless of compliance. The employee should submit the missing airfare receipt before this claim can be processed. [Auto-routed to Manual Review by guardrail rules.]",
+  "audit_trail": [
+    { "step": 1, "tool_called": "policy_lookup",
+      "arguments": { "topics": "lodging, airfare, meals, receipts, approval thresholds, manual review" },
+      "result": { "matched": { "lodging": ["Section 1 - capped per night by city tier"], "airfare": ["Section 1 - Economy class domestic; Premium Economy international 6h+ with pre-approval"], "meals": ["Section 1 - per-diem, no alcohol"], "receipts": ["Section 2 - mandatory over $25", "Section 5 - missing receipt triggers Manual Review"], "approval thresholds": ["Section 3 - above $2,000 always Manual Review"] }, "unmatched_topics": [] }
+    },
+    { "step": 2, "tool_called": "limit_and_perdiem_check",
+      "arguments": { "destination_city": "San Francisco" },
+      "result": { "city_tier": "tier_1", "total_claimed": 1980.0, "total_approved_by_limits": 1980.0, "total_deducted_by_limits": 0.0,
+        "line_results": [
+          {"category": "lodging", "vendor": "Hyatt SF",        "claimed_amount": 340.0, "status": "ok",  "cap_applied": 350, "approved_amount": 340.0, "deducted_amount": 0.0, "reason": "Within Tier 1 lodging cap of $350/night."},
+          {"category": "lodging", "vendor": "Hyatt SF",        "claimed_amount": 340.0, "status": "ok",  "cap_applied": 350, "approved_amount": 340.0, "deducted_amount": 0.0, "reason": "Within Tier 1 lodging cap of $350/night."},
+          {"category": "lodging", "vendor": "Hyatt SF",        "claimed_amount": 340.0, "status": "ok",  "cap_applied": 350, "approved_amount": 340.0, "deducted_amount": 0.0, "reason": "Within Tier 1 lodging cap of $350/night."},
+          {"category": "airfare", "vendor": "United Airlines",  "claimed_amount": 890.0, "status": "ok",                    "approved_amount": 890.0, "deducted_amount": 0.0, "reason": "No cap for airfare; approved pending receipt."},
+          {"category": "meals",   "vendor": "Cafe Royal",       "claimed_amount": 70.0,  "status": "ok",  "cap_applied": 90,  "approved_amount": 70.0,  "deducted_amount": 0.0, "reason": "Within Tier 1 meal cap of $90/day."}
+        ]
+      }
+    },
+    { "step": 3, "tool_called": "receipt_completeness_check",
+      "result": { "receipt_threshold": 25,
+        "missing_receipts": [
+          {"category": "airfare", "date": "2026-05-15", "vendor": "United Airlines", "amount": 890.0}
+        ],
+        "all_required_receipts_present": false
+      }
+    },
+    { "step": 4, "tool_called": "duplicate_detector",
+      "result": { "suspected_duplicates": [], "duplicate_count": 0 }
+    },
+    { "step": 5, "tool_called": "output_validator",
+      "result": { "valid": true, "errors": [] }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "claim_id": "CLM-1003",
+  "decision": "Partially Approve",
+  "total_claimed_amount": 163.0,
+  "approved_amount": 83.0,
+  "deducted_or_rejected_amount": 80.0,
+  "missing_documents": [],
+  "policy_references": [
+    "Section 1: No alcohol reimbursement under Meals category",
+    "Section 4: Ineligible category - alcohol is not reimbursable",
+    "limits.json: ineligible_categories includes 'alcohol'"
+  ],
+  "reason_codes": ["INELIGIBLE_CATEGORY","OVER_MEAL_CAP"],
+  "confidence": 0.96,
+  "explanation": "The claim contains an explicit alcohol line ($60.00) which is a non-reimbursable category under policy. The meals line ($85.00) is noted as 'mostly cocktails' which falls under alcohol/personal entertainment and is also ineligible. Ground transport ($18.00) is individually eligible but the overall claim has no valid reimbursable remainder once ineligible lines are removed - the only eligible item is below the minimum threshold for standalone processing. Entire claim rejected.",
+  "audit_trail": [
+    { "step": 1, "tool_called": "policy_lookup",
+      "arguments": { "topics": "alcohol, meals, ground transport, receipts, ineligible, manual review" },
+      "result": { "matched": { "alcohol": ["Section 1 - No alcohol reimbursement", "Section 4 - Ineligible category (e.g. alcohol, personal entertainment)"], "meals": ["Section 1 - Meals per-diem, no alcohol reimbursement"], "receipts": ["Section 2 - mandatory over $25"] }, "unmatched_topics": [] }
+    },
+    { "step": 2, "tool_called": "limit_and_perdiem_check",
+      "arguments": { "destination_city": "Chicago" },
+      "result": { "city_tier": "tier_2", "total_claimed": 163.0, "total_approved_by_limits": 83.0, "total_deducted_by_limits": 80.0,
+        "line_results": [
+          {"category": "meals",            "vendor": "Rooftop Bar",  "claimed_amount": 85.0, "status": "over_cap", "approved_amount": 65.0,  "deducted_amount": 20.0, "reason": "Exceeds tier_2 meal cap of $65/day; excess deducted."},
+          {"category": "alcohol",          "vendor": "Rooftop Bar",  "claimed_amount": 60.0, "status": "ineligible_category", "approved_amount": 0.0,  "deducted_amount": 60.0, "reason": "Category 'alcohol' is not reimbursable per policy."},
+          {"category": "ground_transport", "vendor": "Yellow Cab",   "claimed_amount": 18.0, "status": "ok",                  "approved_amount": 18.0, "deducted_amount": 0.0,  "reason": "Eligible; no cap defined."}
+        ]
+      }
+    },
+    { "step": 3, "tool_called": "receipt_completeness_check",
+      "result": { "receipt_threshold": 25, "missing_receipts": [], "all_required_receipts_present": true }
+    },
+    { "step": 4, "tool_called": "duplicate_detector",
+      "result": { "suspected_duplicates": [], "duplicate_count": 0 }
+    },
+    { "step": 5, "tool_called": "output_validator",
+      "result": { "valid": true, "errors": [] }
+    }
+  ]
+}

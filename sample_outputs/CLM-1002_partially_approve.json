@@ -1,0 +1,42 @@
+{
+  "claim_id": "CLM-1002",
+  "decision": "Partially Approve",
+  "total_claimed_amount": 1100.0,
+  "approved_amount": 920.0,
+  "deducted_or_rejected_amount": 180.0,
+  "missing_documents": [],
+  "policy_references": [
+    "Section 1: Lodging capped per night by city tier (Tier 1 NYC: $350/night)",
+    "Section 1: Meals capped per day by city tier (Tier 1 NYC: $90/day)",
+    "Section 4: Amount exceeding per-night or per-day limit is deducted, remainder approved"
+  ],
+  "reason_codes": ["OVER_LODGING_CAP", "OVER_MEAL_CAP"],
+  "confidence": 0.93,
+  "explanation": "Two lodging nights at $480 each exceed the Tier 1 (New York) cap of $350/night - $130 deducted per night, $260 total lodging deduction. The meal claim of $120 exceeds the $90/day cap - $30 deducted. Misc parking of $20 is within the $25/day cap. All receipts are present and no duplicates detected. The legitimate portion of $920.00 is approved; $180.00 is deducted for policy cap breaches.",
+  "audit_trail": [
+    { "step": 1, "tool_called": "policy_lookup",
+      "arguments": { "topics": "lodging, meals, misc, receipts, approval thresholds, manual review" },
+      "result": { "matched": { "lodging": ["Section 1 - capped per night by city tier"], "meals": ["Section 1 - per-diem, no alcohol"], "misc": ["Section 1 - tips max $10/day, wifi, parking, capped $25/day combined"], "receipts": ["Section 2 - mandatory over $25"], "approval thresholds": ["Section 3 - $500-$2000 manual review if exceptions"] }, "unmatched_topics": [] }
+    },
+    { "step": 2, "tool_called": "limit_and_perdiem_check",
+      "arguments": { "destination_city": "New York" },
+      "result": { "city_tier": "tier_1", "total_claimed": 1100.0, "total_approved_by_limits": 920.0, "total_deducted_by_limits": 180.0,
+        "line_results": [
+          {"category": "lodging", "vendor": "Marriott NYC", "claimed_amount": 480.0, "status": "over_cap", "cap_applied": 350, "approved_amount": 350.0, "deducted_amount": 130.0, "reason": "Exceeds Tier 1 lodging cap of $350/night; excess deducted."},
+          {"category": "lodging", "vendor": "Marriott NYC", "claimed_amount": 480.0, "status": "over_cap", "cap_applied": 350, "approved_amount": 350.0, "deducted_amount": 130.0, "reason": "Exceeds Tier 1 lodging cap of $350/night; excess deducted."},
+          {"category": "meals",   "vendor": "Steakhouse",   "claimed_amount": 120.0, "status": "over_cap", "cap_applied": 90,  "approved_amount": 90.0,  "deducted_amount": 30.0,  "reason": "Exceeds Tier 1 meal cap of $90/day; excess deducted."},
+          {"category": "misc",    "vendor": "Hotel Parking","claimed_amount": 20.0,  "status": "ok",       "cap_applied": 25,  "approved_amount": 20.0,  "deducted_amount": 0.0,   "reason": "Within misc daily cap."}
+        ]
+      }
+    },
+    { "step": 3, "tool_called": "receipt_completeness_check",
+      "result": { "receipt_threshold": 25, "missing_receipts": [], "all_required_receipts_present": true }
+    },
+    { "step": 4, "tool_called": "duplicate_detector",
+      "result": { "suspected_duplicates": [], "duplicate_count": 0 }
+    },
+    { "step": 5, "tool_called": "output_validator",
+      "result": { "valid": true, "errors": [] }
+    }
+  ]
+}

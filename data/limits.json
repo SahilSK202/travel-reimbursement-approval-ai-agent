@@ -1,0 +1,29 @@
+{
+  "city_tiers": {
+    "tier_1": {
+      "cities": ["New York", "San Francisco", "London", "Tokyo", "Singapore"],
+      "lodging_cap_per_night": 350,
+      "meal_cap_per_day": 90
+    },
+    "tier_2": {
+      "cities": ["Chicago", "Austin", "Berlin", "Toronto", "Pune"],
+      "lodging_cap_per_night": 220,
+      "meal_cap_per_day": 65
+    },
+    "tier_3": {
+      "cities": ["default"],
+      "lodging_cap_per_night": 150,
+      "meal_cap_per_day": 50
+    }
+  },
+  "receipt_required_above": 25,
+  "misc_cap_per_day": 25,
+  "tip_cap_per_day": 10,
+  "mileage_rate_per_mile": 0.67,
+  "approval_matrix": [
+    {"max_amount": 500, "rule": "auto_approve_if_compliant"},
+    {"max_amount": 2000, "rule": "manual_review_if_any_exception"},
+    {"max_amount": null, "rule": "always_manual_review"}
+  ],
+  "ineligible_categories": ["alcohol", "personal_entertainment", "movies", "minibar"]
+}

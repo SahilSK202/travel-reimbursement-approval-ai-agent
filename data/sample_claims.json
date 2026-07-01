@@ -1,0 +1,77 @@
+[
+  {
+    "claim_id": "CLM-1001",
+    "employee_name": "Sahil SK",
+    "destination_city": "Austin",
+    "trip_start_date": "2026-05-10",
+    "trip_end_date": "2026-05-12",
+    "submitted_date": "2026-05-14",
+    "expense_lines": [
+      {"category": "lodging", "date": "2026-05-10", "vendor": "Hilton Austin", "amount": 200.00, "has_receipt": true},
+      {"category": "lodging", "date": "2026-05-11", "vendor": "Hilton Austin", "amount": 200.00, "has_receipt": true},
+      {"category": "meals", "date": "2026-05-10", "vendor": "Local Diner", "amount": 40.00, "has_receipt": true},
+      {"category": "meals", "date": "2026-05-11", "vendor": "Taco Place", "amount": 35.00, "has_receipt": true},
+      {"category": "ground_transport", "date": "2026-05-10", "vendor": "Uber", "amount": 28.00, "has_receipt": true}
+    ],
+    "_expected_decision_for_eval": "Approve"
+  },
+  {
+    "claim_id": "CLM-1002",
+    "employee_name": "Daniel Cho",
+    "destination_city": "New York",
+    "trip_start_date": "2026-05-01",
+    "trip_end_date": "2026-05-03",
+    "submitted_date": "2026-05-05",
+    "expense_lines": [
+      {"category": "lodging", "date": "2026-05-01", "vendor": "Marriott NYC", "amount": 480.00, "has_receipt": true},
+      {"category": "lodging", "date": "2026-05-02", "vendor": "Marriott NYC", "amount": 480.00, "has_receipt": true},
+      {"category": "meals", "date": "2026-05-01", "vendor": "Steakhouse", "amount": 120.00, "has_receipt": true},
+      {"category": "misc", "date": "2026-05-01", "vendor": "Hotel Parking", "amount": 20.00, "has_receipt": true}
+    ],
+    "_expected_decision_for_eval": "Partially Approve"
+  },
+  {
+    "claim_id": "CLM-1003",
+    "employee_name": "Priya Nair",
+    "destination_city": "Chicago",
+    "trip_start_date": "2026-04-20",
+    "trip_end_date": "2026-04-21",
+    "submitted_date": "2026-04-23",
+    "expense_lines": [
+      {"category": "meals", "date": "2026-04-20", "vendor": "Rooftop Bar", "amount": 85.00, "has_receipt": true, "notes": "team drinks, mostly cocktails"},
+      {"category": "alcohol", "date": "2026-04-20", "vendor": "Rooftop Bar", "amount": 60.00, "has_receipt": true},
+      {"category": "ground_transport", "date": "2026-04-20", "vendor": "Yellow Cab", "amount": 18.00, "has_receipt": true}
+    ],
+    "_expected_decision_for_eval": "Reject"
+  },
+  {
+    "claim_id": "CLM-1004",
+    "employee_name": "Miguel Santos",
+    "destination_city": "San Francisco",
+    "trip_start_date": "2026-05-15",
+    "trip_end_date": "2026-05-18",
+    "submitted_date": "2026-05-20",
+    "expense_lines": [
+      {"category": "lodging", "date": "2026-05-15", "vendor": "Hyatt SF", "amount": 340.00, "has_receipt": true},
+      {"category": "lodging", "date": "2026-05-16", "vendor": "Hyatt SF", "amount": 340.00, "has_receipt": true},
+      {"category": "lodging", "date": "2026-05-17", "vendor": "Hyatt SF", "amount": 340.00, "has_receipt": true},
+      {"category": "airfare", "date": "2026-05-15", "vendor": "United Airlines", "amount": 890.00, "has_receipt": false},
+      {"category": "meals", "date": "2026-05-15", "vendor": "Cafe Royal", "amount": 70.00, "has_receipt": true}
+    ],
+    "_expected_decision_for_eval": "Manual Review"
+  },
+  {
+    "claim_id": "CLM-1005",
+    "employee_name": "Asha Verma",
+    "destination_city": "Austin",
+    "trip_start_date": "2026-05-10",
+    "trip_end_date": "2026-05-12",
+    "submitted_date": "2026-05-22",
+    "expense_lines": [
+      {"category": "lodging", "date": "2026-05-10", "vendor": "Hilton Austin", "amount": 200.00, "has_receipt": true},
+      {"category": "meals", "date": "2026-05-10", "vendor": "Local Diner", "amount": 40.00, "has_receipt": true}
+    ],
+    "_expected_decision_for_eval": "Manual Review",
+    "_note": "Duplicate of CLM-0991 lines (same vendor/date/amount) submitted later - should trigger duplicate-suspected manual review"
+  }
+]

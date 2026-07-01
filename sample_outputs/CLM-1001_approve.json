@@ -1,0 +1,43 @@
+{
+  "claim_id": "CLM-1001",
+  "decision": "Approve",
+  "total_claimed_amount": 503.0,
+  "approved_amount": 503.0,
+  "deducted_or_rejected_amount": 0.0,
+  "missing_documents": [],
+  "policy_references": [
+    "Section 1: Lodging, Meals, Ground Transport all eligible",
+    "Section 2: All receipts present for expenses over $25",
+    "Section 3: Total $503 in $500-$2000 band - auto-approve if compliant"
+  ],
+  "reason_codes": ["FULLY_COMPLIANT"],
+  "confidence": 0.97,
+  "explanation": "All expense lines are within Tier 2 (Austin) policy limits. Lodging at $200/night is under the $220 cap. Meals of $40 and $35 are under the $65/day cap. Ground transport is an eligible category. All receipts are present and no duplicate lines were detected. Claim is fully compliant - approved for $503.00.",
+  "audit_trail": [
+    { "step": 1, "tool_called": "policy_lookup",
+      "arguments": { "topics": "lodging, meals, ground transport, receipts, approval thresholds, manual review" },
+      "result": { "matched": { "lodging": ["Section 1 - capped per night by city tier"], "meals": ["Section 1 - per-diem, no alcohol"], "receipts": ["Section 2 - mandatory over $25"], "approval thresholds": ["Section 3 - $500-$2000 auto-approve if compliant"] }, "unmatched_topics": [] }
+    },
+    { "step": 2, "tool_called": "limit_and_perdiem_check",
+      "arguments": { "destination_city": "Austin" },
+      "result": { "city_tier": "tier_2", "total_claimed": 503.0, "total_approved_by_limits": 503.0, "total_deducted_by_limits": 0.0,
+        "line_results": [
+          {"category": "lodging", "vendor": "Hilton Austin", "claimed_amount": 200.0, "status": "ok", "cap_applied": 220, "approved_amount": 200.0, "deducted_amount": 0.0},
+          {"category": "lodging", "vendor": "Hilton Austin", "claimed_amount": 200.0, "status": "ok", "cap_applied": 220, "approved_amount": 200.0, "deducted_amount": 0.0},
+          {"category": "meals",   "vendor": "Local Diner",   "claimed_amount": 40.0,  "status": "ok", "cap_applied": 65,  "approved_amount": 40.0,  "deducted_amount": 0.0},
+          {"category": "meals",   "vendor": "Taco Place",    "claimed_amount": 35.0,  "status": "ok", "cap_applied": 65,  "approved_amount": 35.0,  "deducted_amount": 0.0},
+          {"category": "ground_transport", "vendor": "Uber", "claimed_amount": 28.0,  "status": "ok",                    "approved_amount": 28.0,  "deducted_amount": 0.0}
+        ]
+      }
+    },
+    { "step": 3, "tool_called": "receipt_completeness_check",
+      "result": { "receipt_threshold": 25, "missing_receipts": [], "all_required_receipts_present": true }
+    },
+    { "step": 4, "tool_called": "duplicate_detector",
+      "result": { "suspected_duplicates": [], "duplicate_count": 0 }
+    },
+    { "step": 5, "tool_called": "output_validator",
+      "result": { "valid": true, "errors": [] }
+    }
+  ]
+}
