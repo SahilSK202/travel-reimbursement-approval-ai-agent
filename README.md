@@ -9,7 +9,7 @@ output validator catches malformed results. A Streamlit UI shows the
 decision, an editable claim input, and a full audit trail of every tool call.
 
 See [Demo Evidence](DEMO_EVIDENCE.md) for annotated screenshots of all decision types and UI features.
-
+![Approve Decision](screenshots/03_approve_decision.png)
 ## 1. Setup
 
 ```bash
